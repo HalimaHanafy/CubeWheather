@@ -118,7 +118,7 @@
                 android:textSize="20sp"
                 android:layout_gravity="center"
                 android:text="@string/celsius"
-                android:id="@+id/textView13"
+                android:id="@+id/tv_unit"
             android:layout_alignTop="@+id/tv_temp_day"
             android:layout_toRightOf="@+id/tv_temp_day"
             android:layout_toEndOf="@+id/tv_temp_day" />

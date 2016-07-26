@@ -26,6 +26,7 @@ import com.cubewheather.models.forcast16.WeatherForecastResponseModel;
 import com.cubewheather.utils.NetworkUtils;
 import com.cubewheather.utils.SharedPrefUtil;
 import com.cubewheather.webservice.RestClient;
+import com.google.gson.Gson;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -41,27 +42,54 @@ public class MainActivity extends AppCompatActivity implements
 
     private RecyclerView recyclerView;
     private TextView tvTempDay,tvTempMin,tvTempMax,tvDesc,tvTempNight,tvTempEvening,tvTempMorning
-            ,tvCityName,tvDateTime;
+            ,tvCityName,tvDateTime,tvUnit;
     private ImageView ivDay;
     private String SELECTED_UNIT;
     private NetworkUtils networkUtils;
     private LinearLayout llContent;
     private Button btnTryAgain;
+    private String cityFromSettings;
+    private boolean isRetuned=false;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        if(!getIntent().equals(null))
+        {
+            cityFromSettings=getIntent().getStringExtra("VALUES_CHANGED");
+            isRetuned=true;
+        }
+
         initViews();
+
 //        check if this it is the first time to open the app
         if (SharedPrefUtil.getInstance(getApplicationContext()).read("isFirstTimeToRunApp", true)) {
 //          dialog opens only in first time to run the app to select weather location
             showDialogChooseCity();
         } else {
-//            fetch location weather
-            callWeatherServiceForecast(SharedPrefUtil.getInstance(getApplicationContext())
+            if (!SharedPrefUtil.getInstance(getApplicationContext())
+                    .read("ModelString", "").equals("")) {
+                llContent.setVisibility(View.VISIBLE);
+                btnTryAgain.setVisibility(View.GONE);
+                Gson gson = new Gson();
+                String json = SharedPrefUtil.getInstance(getApplicationContext())
+                        .read("ModelString", "");
+                WeatherForecastResponseModel forecastResponseModel = gson.fromJson(json, WeatherForecastResponseModel.class);
+                initDataOnView(forecastResponseModel);
+            }
+
+            if(isRetuned) {
+                callWeatherServiceForecast(cityFromSettings);
+                isRetuned=false;
+            }else {
+                callWeatherServiceForecast(SharedPrefUtil.getInstance(getApplicationContext())
                     .read("CityChoosed", "UnKnown"));
+            }
+
+
         }
     }
 
@@ -83,7 +111,7 @@ public class MainActivity extends AppCompatActivity implements
             public void onClick(DialogInterface dialog, int which) {
                 String mSearch = locationEditText.getText().toString();
                 if(mSearch.trim().equals("")) {
-                    Toast.makeText(MainActivity.this, "Mansourah,Egypt)", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, "enter a city!", Toast.LENGTH_SHORT).show();
                 }
                 else {
                     SharedPrefUtil.getInstance(getApplicationContext()).write("isFirstTimeToRunApp", false);
@@ -101,15 +129,21 @@ public class MainActivity extends AppCompatActivity implements
     private void callWeatherServiceForecast(String s) {
 //        check network connectivity
         if (networkUtils.isConnectingToInternet()) {
+            Toast.makeText(this, "Refresh", Toast.LENGTH_SHORT).show();
             Call<WeatherForecastResponseModel> call = RestClient.getInstance().getSalonService()
                     .getWeatherForecast(s);
             call.enqueue(this);
         }
         else {
-            //get data from shared
-            llContent.setVisibility(View.GONE);
-            btnTryAgain.setVisibility(View.VISIBLE);
-            Toast.makeText(this, "No internet connection", Toast.LENGTH_SHORT).show();
+            if (SharedPrefUtil.getInstance(getApplicationContext())
+                    .read("ModelString", "").equals("")) {
+//            //get data from shared
+                llContent.setVisibility(View.GONE);
+                btnTryAgain.setVisibility(View.VISIBLE);
+                Toast.makeText(this, "No internet connection", Toast.LENGTH_SHORT).show();
+            }else {
+                Toast.makeText(this, "No internet connection", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
@@ -125,6 +159,7 @@ public class MainActivity extends AppCompatActivity implements
         tvDesc= (TextView) findViewById(R.id.tv_desc);
         tvDateTime= (TextView) findViewById(R.id.tv_datetime);
         ivDay= (ImageView) findViewById(R.id.iv_day);
+        tvUnit= (TextView) findViewById(R.id.tv_unit);
         llContent= (LinearLayout) findViewById(R.id.ll_content);
         btnTryAgain= (Button) findViewById(R.id.btn_tryagain);
         llContent.setVisibility(View.GONE);
@@ -189,126 +224,133 @@ public class MainActivity extends AppCompatActivity implements
             WeatherForecastResponseModel forecastResponseModel = response.body();
 
             //save model
-
-
-
-
+            Gson gson = new Gson();
+            String modelInSharedAsString = gson.toJson(forecastResponseModel);
+            SharedPrefUtil.getInstance(getApplicationContext())
+                    .write("ModelString", modelInSharedAsString);
 
 
             if(forecastResponseModel.getCod().equals("200")) {
-                String cityName = forecastResponseModel.getCity().getName()+","+
-                        forecastResponseModel.getCity().getCountry();
-                SharedPrefUtil.getInstance(getApplicationContext())
-                        .write("CityChoosed", cityName);
-                List<com.cubewheather.models.forcast16.List> daysList =
-                        forecastResponseModel.getList();
 
-//        today obj
-                com.cubewheather.models.forcast16.List todayWeatherObj = new
-                        com.cubewheather.models.forcast16
-                        .List(daysList.get(0).getDt(),
-                        daysList.get(0).getTemp(),
-                        daysList.get(0).getPressure(),
-                        daysList.get(0).getHumidity(),
-                        daysList.get(0).getWeather(),
-                        daysList.get(0).getSpeed(),
-                        daysList.get(0).getDeg(),
-                        daysList.get(0).getClouds(),
-                        daysList.get(0).getRain()
-                );
-
-                tvCityName.setText(forecastResponseModel.getCity().getName() + "," +
-                        forecastResponseModel.getCity().getCountry());
-                tvDesc.setText((todayWeatherObj.getWeather().get(0).getMain() + ""));
-
-
-                if (SharedPrefUtil.getInstance(getApplicationContext())
-                        .read("UnitSelected", "Unknown").equals("Unknown")) {
-
-                    SELECTED_UNIT = getString(R.string.celsius);
-                    tvTempDay.setText((todayWeatherObj.getTemp().getDay() + ""));
-                    tvTempMin.setText("-" + todayWeatherObj.getTemp().getMin() + getString(R.string.celsius));
-                    tvTempMax.setText("+" + todayWeatherObj.getTemp().getMax() + getString(R.string.celsius));
-                    tvTempMorning.setText("" + todayWeatherObj.getTemp().getMorn() + getString(R.string.celsius));
-                    tvTempNight.setText("" + todayWeatherObj.getTemp().getNight() + getString(R.string.celsius));
-                    tvTempEvening.setText("" + todayWeatherObj.getTemp().getEve() + getString(R.string.celsius));
-                } else if (SharedPrefUtil.getInstance(getApplicationContext())
-                        .read("UnitSelected", "Unknown").equals(getString(R.string.fahrenheit))) {
-//            SELECTED_UNIT=getString(R.string.fahrenheit);
-
-                    SELECTED_UNIT = getString(R.string.fahrenheit);
-                    tvTempDay.setText((convertCelciusToFahrenheit((float) todayWeatherObj.getTemp()
-                            .getDay()) + ""));
-                    tvTempMin.setText("-" + convertCelciusToFahrenheit((float) todayWeatherObj
-                            .getTemp().getMin()) + getString(R.string.fahrenheit));
-                    tvTempMax.setText("+" + convertCelciusToFahrenheit((float) todayWeatherObj
-                            .getTemp().getMax()) + getString(R.string.fahrenheit));
-                    tvTempMorning.setText("" + convertCelciusToFahrenheit((float) todayWeatherObj
-                            .getTemp().getMorn()) + getString(R.string.fahrenheit));
-                    tvTempNight.setText("" + convertCelciusToFahrenheit((float) todayWeatherObj
-                            .getTemp().getNight()) + getString(R.string.fahrenheit));
-                    tvTempEvening.setText("" + convertCelciusToFahrenheit((float) todayWeatherObj
-                            .getTemp().getEve()) + getString(R.string.fahrenheit));
-
-
-                } else if (SharedPrefUtil.getInstance(getApplicationContext())
-                        .read("UnitSelected", "Unknown").equals(getString(R.string.celsius))) {
-
-                    SELECTED_UNIT = getString(R.string.celsius);
-                    tvTempDay.setText((todayWeatherObj.getTemp().getDay() + ""));
-                    tvTempMin.setText("-" + todayWeatherObj.getTemp().getMin() + getString(R.string.celsius));
-                    tvTempMax.setText("+" + todayWeatherObj.getTemp().getMax() + getString(R.string.celsius));
-                    tvTempMorning.setText("" + todayWeatherObj.getTemp().getMorn() + getString(R.string.celsius));
-                    tvTempNight.setText("" + todayWeatherObj.getTemp().getNight() + getString(R.string.celsius));
-                    tvTempEvening.setText("" + todayWeatherObj.getTemp().getEve() + getString(R.string.celsius));
-
-                }
-
-                String image = todayWeatherObj.getWeather().get(0).getIcon();
-
-                switch (image){
-                    case "01d":
-                        ivDay.setImageResource(R.drawable.clearsky);
-                        break;
-                    case "02d":
-                        ivDay.setImageResource(R.drawable.ic_fewclouds);
-                        break;
-                    case "03d":
-                        ivDay.setImageResource(R.drawable.ic_scatteredclouds);
-                        break;
-                    case "09d":
-                        ivDay.setImageResource(R.drawable.ic_brokenclouds);
-                        break;
-                    case "10d":
-                        ivDay.setImageResource(R.drawable.ic_showerrain);
-                        break;
-                    case "11d":
-                        ivDay.setImageResource(R.drawable.ic_rain);
-                        break;
-                    case "13d":
-                        ivDay.setImageResource(R.drawable.ic_snow);
-                        break;
-                    case "50d":
-                        ivDay.setImageResource(R.drawable.ic_mist);
-                        break;
-                    default:
-                        ivDay.setImageResource(R.drawable.ic_sunny);
-                        break;
-                }
-
-                Date time = new Date((long) todayWeatherObj.getDt() * 1000);
-                tvDateTime.setText(getReadableDateString(time));
-
-
-                List<com.cubewheather.models.forcast16.List> restWeekDaysList = new ArrayList<>();
-                for (int i = 1; i < daysList.size(); i++) {
-                    restWeekDaysList.add(daysList.get(i));
-                }
-                Toast.makeText(this, "restWeekDaysList=  " + restWeekDaysList.size(),
-                        Toast.LENGTH_SHORT).show();
-                setupDaysListonRecyclerview(restWeekDaysList, SELECTED_UNIT);
+                initDataOnView(forecastResponseModel);
             }
         }
+    }
+
+    private void initDataOnView(WeatherForecastResponseModel forecastResponseModel) {
+        String cityName = forecastResponseModel.getCity().getName()+","+
+                forecastResponseModel.getCity().getCountry();
+        SharedPrefUtil.getInstance(getApplicationContext())
+                .write("CityChoosed", cityName);
+        List<com.cubewheather.models.forcast16.List> daysList =
+                forecastResponseModel.getList();
+
+//        today obj
+        com.cubewheather.models.forcast16.List todayWeatherObj = new
+                com.cubewheather.models.forcast16
+                        .List(daysList.get(0).getDt(),
+                daysList.get(0).getTemp(),
+                daysList.get(0).getPressure(),
+                daysList.get(0).getHumidity(),
+                daysList.get(0).getWeather(),
+                daysList.get(0).getSpeed(),
+                daysList.get(0).getDeg(),
+                daysList.get(0).getClouds(),
+                daysList.get(0).getRain()
+        );
+
+        tvCityName.setText(forecastResponseModel.getCity().getName() + "," +
+                forecastResponseModel.getCity().getCountry());
+        tvDesc.setText((todayWeatherObj.getWeather().get(0).getMain() + ""));
+
+
+        if (SharedPrefUtil.getInstance(getApplicationContext())
+                .read("UnitSelected", "Unknown").equals("Unknown")) {
+
+            SELECTED_UNIT = getString(R.string.celsius);
+            tvTempDay.setText((todayWeatherObj.getTemp().getDay() + ""));
+            tvTempMin.setText("-" + todayWeatherObj.getTemp().getMin() + getString(R.string.celsius));
+            tvTempMax.setText("+" + todayWeatherObj.getTemp().getMax() + getString(R.string.celsius));
+            tvTempMorning.setText("" + todayWeatherObj.getTemp().getMorn() + getString(R.string.celsius));
+            tvTempNight.setText("" + todayWeatherObj.getTemp().getNight() + getString(R.string.celsius));
+            tvTempEvening.setText("" + todayWeatherObj.getTemp().getEve() + getString(R.string.celsius));
+            tvUnit.setText(getResources().getString(R.string.celsius));
+        } else if (SharedPrefUtil.getInstance(getApplicationContext())
+                .read("UnitSelected", "Unknown").equals(getString(R.string.fahrenheit))) {
+
+            SELECTED_UNIT = getString(R.string.fahrenheit);
+            tvTempDay.setText((convertCelciusToFahrenheit((float) todayWeatherObj.getTemp()
+                    .getDay()) + ""));
+            tvTempMin.setText("-" + convertCelciusToFahrenheit((float) todayWeatherObj
+                    .getTemp().getMin()) + getString(R.string.fahrenheit));
+            tvTempMax.setText("+" + convertCelciusToFahrenheit((float) todayWeatherObj
+                    .getTemp().getMax()) + getString(R.string.fahrenheit));
+            tvTempMorning.setText("" + convertCelciusToFahrenheit((float) todayWeatherObj
+                    .getTemp().getMorn()) + getString(R.string.fahrenheit));
+            tvTempNight.setText("" + convertCelciusToFahrenheit((float) todayWeatherObj
+                    .getTemp().getNight()) + getString(R.string.fahrenheit));
+            tvTempEvening.setText("" + convertCelciusToFahrenheit((float) todayWeatherObj
+                    .getTemp().getEve()) + getString(R.string.fahrenheit));
+
+            tvUnit.setText(getResources().getString(R.string.fahrenheit));
+
+        } else if (SharedPrefUtil.getInstance(getApplicationContext())
+                .read("UnitSelected", "Unknown").equals(getString(R.string.celsius))) {
+
+            SELECTED_UNIT = getString(R.string.celsius);
+            tvTempDay.setText((todayWeatherObj.getTemp().getDay() + ""));
+            tvTempMin.setText("-" + todayWeatherObj.getTemp().getMin() + getString(R.string.celsius));
+            tvTempMax.setText("+" + todayWeatherObj.getTemp().getMax() + getString(R.string.celsius));
+            tvTempMorning.setText("" + todayWeatherObj.getTemp().getMorn() + getString(R.string.celsius));
+            tvTempNight.setText("" + todayWeatherObj.getTemp().getNight() + getString(R.string.celsius));
+            tvTempEvening.setText("" + todayWeatherObj.getTemp().getEve() + getString(R.string.celsius));
+            tvUnit.setText(getResources().getString(R.string.celsius));
+        }
+
+        String image = todayWeatherObj.getWeather().get(0).getIcon();
+
+        // use my icons not the api icons
+        switch (image){
+            case "01d":
+                ivDay.setImageResource(R.drawable.clearsky);
+                break;
+            case "02d":
+                ivDay.setImageResource(R.drawable.ic_fewclouds);
+                break;
+            case "03d":
+                ivDay.setImageResource(R.drawable.ic_scatteredclouds);
+                break;
+            case "09d":
+                ivDay.setImageResource(R.drawable.ic_brokenclouds);
+                break;
+            case "10d":
+                ivDay.setImageResource(R.drawable.ic_showerrain);
+                break;
+            case "11d":
+                ivDay.setImageResource(R.drawable.ic_rain);
+                break;
+            case "13d":
+                ivDay.setImageResource(R.drawable.ic_snow);
+                break;
+            case "50d":
+                ivDay.setImageResource(R.drawable.ic_mist);
+                break;
+            default:
+                ivDay.setImageResource(R.drawable.ic_sunny);
+                break;
+        }
+
+        Date time = new Date((long) todayWeatherObj.getDt() * 1000);
+        tvDateTime.setText(getReadableDateString(time));
+
+
+        List<com.cubewheather.models.forcast16.List> restWeekDaysList = new ArrayList<>();
+        for (int i = 1; i < daysList.size(); i++) {
+            restWeekDaysList.add(daysList.get(i));
+        }
+
+        setupDaysListonRecyclerview(restWeekDaysList, SELECTED_UNIT);
+
     }
 
     // Converts to fahrenheit
@@ -328,7 +370,12 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void onFailure(Call<WeatherForecastResponseModel> call, Throwable t) {
         Log.d("TAG", "onFailure: " + t.getLocalizedMessage());
-        llContent.setVisibility(View.GONE);
-        btnTryAgain.setVisibility(View.VISIBLE);
+        if (SharedPrefUtil.getInstance(getApplicationContext())
+                .read("ModelString", "").equals("")) {
+            llContent.setVisibility(View.GONE);
+            btnTryAgain.setVisibility(View.VISIBLE);
+        }else {
+
+        }
     }
 }

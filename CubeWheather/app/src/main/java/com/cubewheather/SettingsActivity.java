@@ -159,6 +159,8 @@ public class SettingsActivity extends AppCompatActivity {
         int itemId = item.getItemId();
         if(itemId == android.R.id.home){
             Intent backIntent = new Intent(SettingsActivity.this, MainActivity.class);
+            backIntent.putExtra("VALUES_CHANGED",SharedPrefUtil.getInstance(getApplicationContext())
+                    .read("CityChoosed", "UnKnown"));
             startActivity(backIntent);
         }
         return true;
