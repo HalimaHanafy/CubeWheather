@@ -104,6 +104,8 @@ public class MainActivity extends AppCompatActivity implements
         locationEditText.setInputType(InputType.TYPE_CLASS_TEXT);
         locationEditText.setText(R.string.default_search_city);
 
+        //// TODO: 26/07/16 api to get all city list not edit text "auto complete et" 
+        
         float scale = getResources().getDisplayMetrics().density;
         int padding = (int) (16 * scale + 0.5f); // this converts 16dp to pixels
         locationDialog.setView(locationEditText, padding, 0, padding, 0);
