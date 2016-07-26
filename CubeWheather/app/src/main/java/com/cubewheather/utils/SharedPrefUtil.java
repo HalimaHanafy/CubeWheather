@@ -64,4 +64,33 @@ public class SharedPrefUtil {
         editor.apply();
     }
 
+    /**
+     * Write string preferences.
+     *
+     * @param preferenceName  The unique name of preference.
+     * @param preferenceValue The value to save in preference.
+     */
+    public void write(String preferenceName, String preferenceValue) {
+
+        editor.putString(preferenceName, preferenceValue);
+        /* Using apply() instead of commit() because
+         *commit() writes its preferences out to persistent storage synchronously
+         *apply() commits its changes to the in-memory SharedPreferences immediately
+         *but starts an asynchronous commit to disk and you won't be notified of any failures
+         **/
+        editor.apply();
+    }
+
+    /**
+     * Read string preferences.
+     *
+     * @param preferenceName The unique name of preference.
+     * @param defaultValue   The value if there is no saved one.
+     * @return The value of saved preference.
+     */
+    public String read(String preferenceName, String defaultValue) {
+
+        return preferences.getString(preferenceName, defaultValue);
+    }
+
 }
