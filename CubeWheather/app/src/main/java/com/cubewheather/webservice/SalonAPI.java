@@ -12,7 +12,6 @@ import retrofit2.http.Query;
 
 public interface SalonAPI {
 
-
 //cnt=7 this is days num you need
     @GET("/data/2.5/forecast/daily?units=metric&APPID=4f087bf7b1cdc161443d65c7be0feccd&cnt=7")
     Call<WeatherForecastResponseModel> getWeatherForecast(@Query("q") String q);

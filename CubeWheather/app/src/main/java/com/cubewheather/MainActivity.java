@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity implements
     private RecyclerView recyclerView;
     private TextView tvTempDay,tvTempMin,tvTempMax,tvDesc,tvTempNight,tvTempEvening,tvTempMorning
             ,tvCityName,tvDateTime,tvUnit;
-    private ImageView ivDay;
+    private ImageView ivDay,ivDayTwo;
     private String SELECTED_UNIT;
     private NetworkUtils networkUtils;
     private LinearLayout llContent;
@@ -159,6 +159,8 @@ public class MainActivity extends AppCompatActivity implements
         tvDesc= (TextView) findViewById(R.id.tv_desc);
         tvDateTime= (TextView) findViewById(R.id.tv_datetime);
         ivDay= (ImageView) findViewById(R.id.iv_day);
+        ivDayTwo= (ImageView) findViewById(R.id.iv_day_two);
+
         tvUnit= (TextView) findViewById(R.id.tv_unit);
         llContent= (LinearLayout) findViewById(R.id.ll_content);
         btnTryAgain= (Button) findViewById(R.id.btn_tryagain);
@@ -269,8 +271,8 @@ public class MainActivity extends AppCompatActivity implements
 
             SELECTED_UNIT = getString(R.string.celsius);
             tvTempDay.setText((todayWeatherObj.getTemp().getDay() + ""));
-            tvTempMin.setText("-" + todayWeatherObj.getTemp().getMin() + getString(R.string.celsius));
-            tvTempMax.setText("+" + todayWeatherObj.getTemp().getMax() + getString(R.string.celsius));
+            tvTempMin.setText(todayWeatherObj.getTemp().getMin() + getString(R.string.celsius));
+            tvTempMax.setText(todayWeatherObj.getTemp().getMax() + getString(R.string.celsius));
             tvTempMorning.setText("" + todayWeatherObj.getTemp().getMorn() + getString(R.string.celsius));
             tvTempNight.setText("" + todayWeatherObj.getTemp().getNight() + getString(R.string.celsius));
             tvTempEvening.setText("" + todayWeatherObj.getTemp().getEve() + getString(R.string.celsius));
@@ -281,9 +283,9 @@ public class MainActivity extends AppCompatActivity implements
             SELECTED_UNIT = getString(R.string.fahrenheit);
             tvTempDay.setText((convertCelciusToFahrenheit((float) todayWeatherObj.getTemp()
                     .getDay()) + ""));
-            tvTempMin.setText("-" + convertCelciusToFahrenheit((float) todayWeatherObj
+            tvTempMin.setText( convertCelciusToFahrenheit((float) todayWeatherObj
                     .getTemp().getMin()) + getString(R.string.fahrenheit));
-            tvTempMax.setText("+" + convertCelciusToFahrenheit((float) todayWeatherObj
+            tvTempMax.setText(convertCelciusToFahrenheit((float) todayWeatherObj
                     .getTemp().getMax()) + getString(R.string.fahrenheit));
             tvTempMorning.setText("" + convertCelciusToFahrenheit((float) todayWeatherObj
                     .getTemp().getMorn()) + getString(R.string.fahrenheit));
@@ -299,8 +301,8 @@ public class MainActivity extends AppCompatActivity implements
 
             SELECTED_UNIT = getString(R.string.celsius);
             tvTempDay.setText((todayWeatherObj.getTemp().getDay() + ""));
-            tvTempMin.setText("-" + todayWeatherObj.getTemp().getMin() + getString(R.string.celsius));
-            tvTempMax.setText("+" + todayWeatherObj.getTemp().getMax() + getString(R.string.celsius));
+            tvTempMin.setText(todayWeatherObj.getTemp().getMin() + getString(R.string.celsius));
+            tvTempMax.setText(todayWeatherObj.getTemp().getMax() + getString(R.string.celsius));
             tvTempMorning.setText("" + todayWeatherObj.getTemp().getMorn() + getString(R.string.celsius));
             tvTempNight.setText("" + todayWeatherObj.getTemp().getNight() + getString(R.string.celsius));
             tvTempEvening.setText("" + todayWeatherObj.getTemp().getEve() + getString(R.string.celsius));
@@ -312,31 +314,44 @@ public class MainActivity extends AppCompatActivity implements
         // use my icons not the api icons
         switch (image){
             case "01d":
-                ivDay.setImageResource(R.drawable.clearsky);
+                ivDay.setImageResource(R.drawable.ic_clearskys);
+                ivDayTwo.setImageResource(R.drawable.ic_clearskys);
                 break;
             case "02d":
-                ivDay.setImageResource(R.drawable.ic_fewclouds);
+                ivDay.setImageResource(R.drawable.ic_clouds);
+                ivDayTwo.setImageResource(R.drawable.ic_clouds);
                 break;
             case "03d":
-                ivDay.setImageResource(R.drawable.ic_scatteredclouds);
+                ivDay.setImageResource(R.drawable.ic_scatteredcloud);
+                ivDayTwo.setImageResource(R.drawable.ic_scatteredcloud);
+                break;
+            case "04d":
+                ivDay.setImageResource(R.drawable.ic_brokencloudss);
+                ivDayTwo.setImageResource(R.drawable.ic_brokencloudss);
                 break;
             case "09d":
-                ivDay.setImageResource(R.drawable.ic_brokenclouds);
+                ivDay.setImageResource(R.drawable.ic_brokencloudss);
+                ivDayTwo.setImageResource(R.drawable.ic_brokencloudss);
                 break;
             case "10d":
-                ivDay.setImageResource(R.drawable.ic_showerrain);
+                ivDay.setImageResource(R.drawable.ic_showerrains);
+                ivDayTwo.setImageResource(R.drawable.ic_showerrains);
                 break;
             case "11d":
-                ivDay.setImageResource(R.drawable.ic_rain);
+                ivDay.setImageResource(R.drawable.ic_rainy);
+                ivDayTwo.setImageResource(R.drawable.ic_rainy);
                 break;
             case "13d":
-                ivDay.setImageResource(R.drawable.ic_snow);
+                ivDay.setImageResource(R.drawable.ic_snows);
+                ivDayTwo.setImageResource(R.drawable.ic_snows);
                 break;
             case "50d":
-                ivDay.setImageResource(R.drawable.ic_mist);
+                ivDay.setImageResource(R.drawable.ic_mistimg);
+                ivDayTwo.setImageResource(R.drawable.ic_mistimg);
                 break;
             default:
-                ivDay.setImageResource(R.drawable.ic_sunny);
+                ivDay.setImageResource(R.drawable.ic_clearskys);
+                ivDayTwo.setImageResource(R.drawable.ic_clearskys);
                 break;
         }
 

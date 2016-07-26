@@ -80,16 +80,6 @@
                 android:layout_toEndOf="@+id/tv_temp_day"
                 android:id="@+id/tv_max_temp" />
 
-            <ImageView
-                android:visibility="gone"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:srcCompat="@drawable/ic_sunny"
-                android:layout_centerVertical="true"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true"
-                android:id="@+id/iv_desc" />
-
         <TextView
             android:textColor="@color/primary_text"
             android:layout_width="wrap_content"
@@ -105,7 +95,7 @@
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="70dp"
-            android:src="@drawable/ic_sunny"
+            android:src="@drawable/ic_clearskys"
             android:id="@+id/iv_day"
             android:layout_alignTop="@+id/iv_desc" />
 

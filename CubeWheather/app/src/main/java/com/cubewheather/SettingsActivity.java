@@ -73,8 +73,6 @@ public class SettingsActivity extends AppCompatActivity {
             }
         });
 
-
-
         llUnit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -90,8 +88,9 @@ public class SettingsActivity extends AppCompatActivity {
                 }
                 else {
                     //no thing selected
-                    selectedUnitIndex=-1;
+                    selectedUnitIndex=0;
                 }
+
                 //open dialog to choose unit
                 new MaterialDialog.Builder(SettingsActivity.this)
                         .title("Change Temp Unit")
