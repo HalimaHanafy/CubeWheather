@@ -1,3 +1,10 @@
 <resources>
-    <string name="app_name">Cube Wheather</string>
+    <string name="app_name">Cube Weather</string>
+    <string name="action_settings">Settings</string>
+    <string name="activity_settings_title">Settings</string>
+    <string name="celsius">°C</string>
+    <string name="fahrenheit">°F</string>
+    <string name="activity_day_details">Day details</string>
+    <string name="Tryagain">Try Again</string>
+    <string name="default_search_city">Mansourah,Egypt</string>
 </resources>

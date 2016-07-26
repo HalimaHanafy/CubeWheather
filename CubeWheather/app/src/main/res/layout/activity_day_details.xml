@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/icons"
+    android:fitsSystemWindows="true"
+    tools:context="com.cubewheather.DayDetailsActivity">
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:popupTheme="@style/AppTheme.PopupOverlay" />
+
+    </android.support.design.widget.AppBarLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        tools:context="com.youravgjoe.apps.whether.SettingsActivity"
+        tools:showIn="@layout/activity_day_details"
+        android:orientation="vertical"
+        android:weightSum="1">
+
+
+        <TextView
+                android:textColor="@color/primary_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAlignment="center"
+                android:textSize="20sp"
+                android:text="SUNNY"
+                android:textStyle="bold"
+                android:id="@+id/tv_desc"
+                android:layout_below="@+id/tv_temp_day"
+                android:layout_centerHorizontal="true"/>
+
+            <TextView
+                android:text="MONDAY JULY 25 2016"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/tv_datetime"
+                android:layout_margin="5dp"
+                android:textSize="20sp"
+                android:textColor="@color/secondary_text"
+                android:layout_below="@+id/tv_desc"
+                android:layout_centerHorizontal="true" />
+
+            <TextView
+                android:textColor="@color/secondary_text"
+                android:text="-10 C"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/tv_min_temp"
+                android:layout_alignBaseline="@+id/tv_temp_day"
+                android:layout_alignBottom="@+id/tv_temp_day"
+                android:layout_toLeftOf="@+id/tv_temp_day"
+                android:layout_toStartOf="@+id/tv_temp_day" />
+
+            <TextView
+                android:textColor="@color/secondary_text"
+                android:text="+30 C"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/tv_min_temp"
+                android:layout_toRightOf="@+id/tv_temp_day"
+                android:layout_toEndOf="@+id/tv_temp_day"
+                android:id="@+id/tv_max_temp" />
+
+            <ImageView
+                android:visibility="gone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/ic_sunny"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:id="@+id/iv_desc" />
+
+        <TextView
+            android:textColor="@color/primary_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:textSize="50sp"
+            android:layout_gravity="center"
+            android:text="22.00"
+            android:id="@+id/tv_temp_day"
+            android:layout_below="@+id/iv_day"
+            android:layout_centerHorizontal="true" />
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:src="@drawable/ic_sunny"
+            android:id="@+id/iv_day"
+            android:layout_alignTop="@+id/iv_desc" />
+
+        <TextView
+                android:padding="0dp"
+                android:textColor="@color/primary_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAlignment="center"
+                android:textSize="20sp"
+                android:layout_gravity="center"
+                android:text="@string/celsius"
+                android:id="@+id/tv_unit"
+            android:layout_alignTop="@+id/tv_temp_day"
+            android:layout_toRightOf="@+id/tv_temp_day"
+            android:layout_toEndOf="@+id/tv_temp_day" />
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            android:foregroundGravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:layout_below="@+id/tv_datetime"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true">
+
+
+            <TextView
+                android:textColor="@color/primary_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAlignment="center"
+                android:layout_gravity="center"
+                android:text="NIGHT" />
+
+            <TextView
+                android:id="@+id/tv_night_temp"
+                android:textColor="@color/secondary_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAlignment="center"
+                android:layout_gravity="center"
+                android:text="22 C"/>
+
+
+            <TextView
+                android:textColor="@color/primary_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAlignment="center"
+                android:layout_gravity="center"
+                android:text="EVENING" />
+
+            <TextView
+                android:id="@+id/tv_evening_temp"
+                android:textColor="@color/secondary_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAlignment="center"
+                android:layout_gravity="center"
+                android:text="20 C"  />
+
+            <TextView
+                android:textColor="@color/primary_text"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:textAlignment="center"
+                android:layout_gravity="center"
+                android:text="MORNING" />
+
+            <TextView
+                android:id="@+id/tv_morning_temp"
+                android:textColor="@color/secondary_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAlignment="center"
+                android:layout_gravity="center"
+                android:text="20 C"  />
+        </LinearLayout>
+    </RelativeLayout>
+
+</android.support.design.widget.CoordinatorLayout>

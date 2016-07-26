@@ -1,19 +1,232 @@
-<?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.cubewheather.MainActivity">
 
-    <TextView
+    <Button
+        android:id="@+id/btn_tryagain"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="@+id/activity_main"
-        app:layout_constraintLeft_toLeftOf="@+id/activity_main"
-        app:layout_constraintRight_toRightOf="@+id/activity_main"
-        app:layout_constraintTop_toTopOf="@+id/activity_main" />
+        android:text="@string/Tryagain"
+        android:visibility="gone"
+        android:layout_centerInParent="true"/>
 
-</android.support.constraint.ConstraintLayout>
+    <LinearLayout
+        android:id="@+id/ll_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+    <RelativeLayout
+        android:padding="15dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/relativeLayout2">
+
+        <TextView
+            android:textColor="@color/primary_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:textSize="50sp"
+            android:layout_gravity="center"
+            android:text="22.00"
+            android:id="@+id/tv_temp_day"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true" />
+
+        <TextView
+            android:padding="0dp"
+            android:textColor="@color/primary_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:textSize="20sp"
+            android:layout_gravity="center"
+            android:text="@string/celsius"
+            android:id="@+id/tv_unit"
+            android:layout_alignParentTop="true"
+            android:layout_toRightOf="@+id/tv_temp_day"
+            android:layout_toEndOf="@+id/tv_temp_day" />
+
+        <TextView
+            android:textColor="@color/primary_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:textSize="20sp"
+            android:text="SUNNY"
+            android:textStyle="bold"
+            android:id="@+id/tv_desc"
+            android:layout_below="@+id/tv_temp_day"
+            android:layout_centerHorizontal="true"/>
+
+        <TextView
+            android:text="MONDAY JULY 25 2016"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/tv_datetime"
+            android:layout_margin="5dp"
+            android:textSize="20sp"
+            android:textColor="@color/secondary_text"
+            android:layout_below="@+id/tv_desc"
+            android:layout_centerHorizontal="true" />
+
+        <TextView
+            android:textColor="@color/secondary_text"
+            android:text="-10 C"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/tv_min_temp"
+            android:layout_alignBaseline="@+id/tv_temp_day"
+            android:layout_alignBottom="@+id/tv_temp_day"
+            android:layout_toLeftOf="@+id/tv_temp_day"
+            android:layout_toStartOf="@+id/tv_temp_day" />
+
+        <TextView
+            android:textColor="@color/secondary_text"
+            android:text="+30 C"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/tv_min_temp"
+            android:layout_toRightOf="@+id/tv_temp_day"
+            android:layout_toEndOf="@+id/tv_temp_day"
+            android:id="@+id/tv_max_temp" />
+
+        <ImageView
+            android:visibility="gone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/ic_sunny"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:id="@+id/iv_desc" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/ic_fewclouds"
+            android:layout_alignParentTop="true"
+            android:id="@+id/iv_day" />
+
+
+    </RelativeLayout>
+
+    <View
+        android:layout_height="1dp"
+        android:layout_width="match_parent"
+        android:background="@color/divider"/>
+
+
+    <LinearLayout
+        android:layout_gravity="center"
+        android:padding="5dp"
+        android:layout_width="wrap_content"
+        android:orientation="horizontal"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:textColor="@color/primary_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:layout_gravity="center"
+            android:text="NIGHT" />
+
+        <TextView
+            android:id="@+id/tv_night_temp"
+            android:layout_marginLeft="2dp"
+            android:textColor="@color/secondary_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:layout_gravity="center"
+            android:text="22 C"/>
+
+
+        <TextView
+            android:layout_marginLeft="10dp"
+            android:textColor="@color/primary_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:layout_gravity="center"
+            android:text="EVENING" />
+
+        <TextView
+            android:id="@+id/tv_evening_temp"
+            android:layout_marginLeft="2dp"
+            android:textColor="@color/secondary_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:layout_gravity="center"
+            android:text="20 C"  />
+
+        <TextView
+            android:layout_marginLeft="10dp"
+            android:textColor="@color/primary_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:layout_gravity="center"
+            android:text="MORNING" />
+
+        <TextView
+            android:id="@+id/tv_morning_temp"
+            android:layout_marginLeft="2dp"
+            android:textColor="@color/secondary_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:layout_gravity="center"
+            android:text="20 C"  />
+
+    </LinearLayout>
+    <View
+        android:layout_height="1dp"
+        android:layout_width="match_parent"
+        android:background="@color/divider"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context="com.cubewheather.SettingsActivity"
+        android:orientation="vertical"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
+
+
+
+    <TextView
+        android:id="@+id/tv_city"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:layout_gravity="center"
+        android:foregroundGravity="center"
+        android:textSize="28sp"
+        android:textColor="@color/primary_text"
+        android:gravity="center_vertical"
+        android:text="MANSOURA"
+        android:minHeight="?android:attr/listPreferredItemHeight"/>
+
+    <View
+        android:layout_height="1dp"
+        android:layout_width="match_parent"
+        android:background="@color/divider"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="vertical" />
+
+        </LinearLayout>
+    </LinearLayout>
+
+</RelativeLayout>
